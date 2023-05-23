@@ -12,31 +12,32 @@ class ZoologicoController:
 
         if opcion == 1:
             st.subheader("ID del Animal:")
-            id = st.number_input("Ingresar ID :", min_value=0, key="id")
+            id = st.text_input("Ingresar ID :", key="id")
             verificacion = self.modelo.verificar_animal(id)
             if verificacion == 0:
                 animal = self.vista.menu_crearAnimal(id)
                 if animal is not None:
                     self.modelo.ingresar_animal(animal.id, animal)
                     self.modelo.ingresar_habitat(animal.habitat)
+                else:
+                    st.info("ingrese un animal")
             else:
-                st.info("Ya existe un animal con ese id.")
+                st.info("Animal ya esta dentro del zoologico")
+
 
         if opcion == 2:
-            #self.modelo.leer_animal()
-            self.modelo.catalogo_animales()
+            self.modelo.leer_animal()
 
         if opcion == 3:
+            st.write("Habitat para habilitar:")
+            self.modelo.leer_habitat()
             st.subheader("Tipo")
-            #st.write(self.modelo.leer_habitat())
-            tipo = st.text_input("De los que se muestran en pantalla de acuerdo a los animales agregados", key= "tipo")
-            comprobador = self.modelo.verificar(tipo)
-            if comprobador == 0:
+            tipo = st.text_input("Digite uno de los habitat que hay en pantalla:", key="passwoord")
+            comprobar = self.modelo.verificar(tipo)
+            if comprobar == 1:
                 habitat = self.vista.menu_habitat(tipo)
-                if habitat is not None:
-                    self.modelo.caracteristicas_habitat(tipo, habitat)
-            else:
-                st.info("No existe aun.")
+                self.modelo.caracteristicas_habitat(tipo, habitat)
+
 
         """
 

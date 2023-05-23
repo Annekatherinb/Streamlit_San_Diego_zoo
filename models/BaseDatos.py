@@ -1,15 +1,22 @@
 import models.Animal as animalModel
-
+import streamlit as st
 class Datos:
     def __init__(self):
+
         self.animales = {}
-        self.habitats = []
+
+        if "habitat" in st.session_state:
+            self.habitats = st.session_state["habitat"]
+        else:
+            self.habitats = []
+
         self.habitat_fijo = {}
         self.asignacion = {}
         self.alimentacion = {}
 
     def ingresar_animal(self,id, animal):
         self.animales[id] = animal
+
 
     def verificar_animal(self, id):
         if self.animales.get(id) is not None:
@@ -19,20 +26,22 @@ class Datos:
 
     def leer_animal(self):
         print("Animales ingresados al zoologico:\n")
+        st.write(self.animales)
         for key in self.animales:
             animal = self.animales[key]
-            animal.mostrarAnimal()
+            st.write(f'El animal de id{key}, se llama{animal.nombre}, y es un/a {animal.especie}')
+
 
     def ingresar_habitat(self, habitat):
         if habitat in self.habitats:
-            print("Ya se encuentra agregado ese Habitat al zoologico\n")
+            st.warning("Ya se encuentra agregado ese Habitat al zoologico\n")
         else:
             self.habitats.append(habitat)
 
     def leer_habitat(self):
         print("Los habitats ingresados hasta el momento son: ")
-        for i in range(len(self.habitats)):
-            print(self.habitats[i])
+        st.write(self.habitats)
+
 
     def caracteristicas_habitat(self, habitat, ob_Habi):
         if habitat not in self.habitat_fijo:
@@ -54,6 +63,7 @@ class Datos:
                 return 1
             else:
                 return 0
+                st.warning("Desconocido")
 
     def animal_habitat(self, id, habitat,clima):
         if id in self.animales:
@@ -106,3 +116,17 @@ class Datos:
             for animal in animales:
                 print(animal.nombre, end=", ")
         print("\n")
+
+    def catologo_animales(self):
+        with st.container:
+            st.subheader("Todos los animales:")
+            if len(self.animales) == 0:
+                st.error("No hay animales")
+            else:
+                for key, animal in self.animales.items():
+                    st.markdown(f'**:red[id del animal:]**{key} **:red[Nombre:]**{animal.nombre} **:red[Especie:]** {animal.especie}')
+
+
+    def devuelve(self):
+        return self.habitats
+
